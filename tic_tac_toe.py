@@ -1,8 +1,10 @@
 from pprint import pprint
-from random import randint
-board = {}
-sym = {}
+from random import randint, choice
 
+board = {}
+list_board = []
+sym = {}
+win = False
 def main():
     global sym
     sym['comp'] = controller()
@@ -11,21 +13,65 @@ def main():
 
 # main code of the game
 def play():
+    global win
     start = initial_set() #  if comp == 1, then comp goes first
     display_board()
-    update_board()
+    print(start)
+    if start == 1: 
+        print('Computer starts first!!')
+    else:
+        print('You go first!!!')
+
+    while not win:
+        if start == 0: 
+            player_turn()
+            start = 1
+        else:
+            comp_turn()
+            start = 0
+
+        display_board()
+        win = win_checker()
+
+
+# check if anyone has won ? 
+def win_checker():
+    global list_board, win
+    s = []
+
+    #check for if anyone makes a line
+
+    #check for tie
+    if list_board == s:
+        print("tie")
+        return True
+    else:
+        return False
+
+
+
+# computer's move
+def comp_turn():
+    global sym, board, list_board
+    move = choice(list_board)
+    board[move] = sym['comp']
+    list_board.remove(move)
+    
 
 # ask user for their move 
-def update_board():
-    global sym, board
-
+def player_turn():
+    global sym, board, list_board
     print("Where would you like to mark ? (for Row type [top-, mid-, bottom-] and for column type [L, M, R] ) example: top-L")
     while True:
         temp = input()
         if board.get(temp, 'Fail') == 'Fail':
             print('error: invalid answer, try again')
+        elif board[temp] != " ":
+            print('try again')
         else: 
             board[temp] = sym['player']
+            list_board.remove(temp)
+            break
 
 
 
@@ -65,7 +111,7 @@ def controller():
 
 # set the baord to inital state
 def set_board():
-    global board
+    global board, list_board
     board = {'top-L'    : ' ',
              'top-M'    : ' ',
              'top-R'    : ' ',
@@ -74,7 +120,9 @@ def set_board():
              'mid-R'    : ' ',
              'bottom-L' : ' ',
              'bottom-M' : ' ',
-             'bottom-R': ' ' }
+             'bottom-R' : ' ' }
+
+    list_board = list(board.keys())
 
 if __name__ == '__main__':
     main()
