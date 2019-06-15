@@ -23,7 +23,6 @@ def play():
 
     while True:
         player_turn()
-        display_board()
         if win_checker(sym['player']):
             break
         
